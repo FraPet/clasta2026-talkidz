@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLASTA 2026 · Talkidz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --red:      #8B1A1A;
+      --red-dark: #6E1515;
+      --green:    #2B7A3A;
+      --green-lt: #EBF5EE;
+      --bg:       #F8F5F4;
+      --card:     #FFFFFF;
+      --text:     #2C3E50;
+      --muted:    #6B7A8D;
+      --border:   #DDE4EC;
+      --r:        10px;
+      --sh:       0 2px 12px rgba(80,20,20,.09);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+
+    /* ── Utilities ── */
+    .wrap  { max-width: 960px; margin: 0 auto; padding: 0 1.25rem; }
+    section { padding: 3rem 0; }
+    .card  { background: var(--card); border-radius: var(--r); padding: 1.5rem; box-shadow: var(--sh); }
+    .sec-title { font-size: 1.35rem; font-weight: 700; color: var(--red); padding-left: .75rem; border-left: 4px solid var(--green); margin-bottom: 1.5rem; }
+    .sec-title small { display: block; font-size: .75rem; font-weight: 400; color: var(--muted); margin-top: 2px; }
+
+    /* ── Header / Nav ── */
+    header { position: sticky; top: 0; z-index: 100; background: var(--red); box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 52px; gap: 1rem; }
+    .brand { font-weight: 700; font-size: .92rem; color: #fff; text-decoration: none; white-space: nowrap; }
+    .brand span { color: #F4A4A4; }
+    .nav-links { display: flex; gap: 1.1rem; list-style: none; }
+    .nav-links a { color: rgba(255,255,255,.78); text-decoration: none; font-size: .76rem; font-weight: 500; white-space: nowrap; transition: color .15s; }
+    .nav-links a:hover { color: #fff; }
+    .btn-nav { background: var(--green); color: #fff; border: none; border-radius: 6px; padding: .36rem .8rem; font-size: .76rem; font-weight: 600; text-decoration: none; white-space: nowrap; transition: background .15s; }
+    .btn-nav:hover { background: #1e5e2b; }
+
+    /* ── Watermark ── */
+    .watermark { position: fixed; inset: 0; z-index: 50; pointer-events: none; display: flex; align-items: center; justify-content: space-between; padding: 0 4%; overflow: hidden; }
+    .wm-logo { width: min(38vw, 420px); height: auto; opacity: .07; filter: grayscale(.4); object-fit: contain; }
+
+    /* ── Hero logos ── */
+    .hero-logos { display: flex; gap: 1.2rem; align-items: center; justify-content: center; margin-bottom: 1.2rem; flex-wrap: wrap; }
+    .hero-logo-pill { background: rgba(255,255,255,.92); border-radius: 10px; padding: .5rem 1.2rem; display: inline-flex; align-items: center; }
+    .hero-logo-pill img { height: 128px; object-fit: contain; display: block; }
+
+    /* ── Hero ── */
+    #hero { background: linear-gradient(135deg, #8B1A1A 0%, #A32020 100%); color: #fff; padding: 3.5rem 0 3rem; }
+    .hero-tag { display: inline-block; background: rgba(255,255,255,.12); border-radius: 20px; padding: .22rem .8rem; font-size: .72rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #F4A4A4; margin-bottom: .9rem; }
+    #hero h1 { font-size: clamp(1.15rem,2.8vw,1.75rem); font-weight: 700; line-height: 1.35; max-width: 700px; margin-bottom: .75rem; }
+    .hero-sub { font-size: .88rem; color: rgba(255,255,255,.7); margin-bottom: 1.4rem; line-height: 1.7; }
+    .hero-sub sup { font-size: .65em; vertical-align: super; }
+    .badges { display: flex; gap: .55rem; flex-wrap: wrap; margin-bottom: 1.8rem; }
+    .badge { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22); border-radius: 6px; padding: .28rem .65rem; font-size: .78rem; font-weight: 500; color: #fff; }
+    .badge strong { color: #C8E6C9; }
+    .hero-btns { display: flex; gap: .7rem; flex-wrap: wrap; }
+    .btn-primary { background: var(--green); color: #fff; border: none; border-radius: 8px; padding: .6rem 1.2rem; font-size: .88rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: .35rem; transition: background .15s; }
+    .btn-primary:hover { background: #1e5e2b; }
+    .btn-ghost { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.35); border-radius: 8px; padding: .6rem 1.2rem; font-size: .88rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: .35rem; transition: border-color .15s; }
+    .btn-ghost:hover { border-color: rgba(255,255,255,.75); }
+
+    /* ── Metodo ── */
+    .method-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+    .method-card { background: var(--card); border-radius: var(--r); padding: 1.2rem; box-shadow: var(--sh); border-top: 3px solid var(--green); }
+    .method-card h3 { font-size: .78rem; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .5rem; }
+    .method-card p { font-size: .83rem; color: var(--muted); line-height: 1.6; }
+    .method-card strong { color: var(--text); }
+    .part-center { display: flex; flex-direction: column; align-items: center; margin-top: 2rem; }
+    .part-label { font-size: .73rem; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .65rem; }
+    .part-tbl { border-collapse: collapse; font-size: .83rem; }
+    .part-tbl th { background: var(--red); color: #fff; padding: .38rem 1.1rem; text-align: center; font-size: .72rem; font-weight: 600; letter-spacing: .04em; }
+    .part-tbl th:first-child { text-align: left; border-radius: 6px 0 0 0; }
+    .part-tbl th:last-child { border-radius: 0 6px 0 0; }
+    .part-tbl td { padding: .38rem 1.1rem; text-align: center; border-bottom: 1px solid var(--border); }
+    .part-tbl td:first-child { text-align: left; font-weight: 500; }
+    .part-tbl .tot td { border-bottom: none; background: #fdf0f0; font-weight: 600; color: var(--red); }
+
+    /* ── Tabs ── */
+    .tabs-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 1rem; }
+    .tabs { display: flex; gap: .3rem; border-bottom: 2px solid var(--border); min-width: max-content; }
+    .tab { padding: .45rem .85rem; font-size: .8rem; font-weight: 500; background: none; border: none; cursor: pointer; color: var(--muted); position: relative; transition: color .15s; white-space: nowrap; font-family: inherit; }
+    .tab::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: var(--green); transform: scaleX(0); transition: transform .15s; }
+    .tab.on { color: var(--green); font-weight: 600; }
+    .tab.on::after { transform: scaleX(1); }
+    .tab:hover:not(.on) { color: var(--text); }
+
+    /* ── Chart + table layout ── */
+    .desc-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: center; }
+    .desc-chart-col { display: flex; flex-direction: column; align-items: center; }
+    .ch-wrap { position: relative; height: 300px; width: 100%; max-width: 400px; }
+    .ch-note { font-size: .72rem; color: var(--muted); text-align: center; margin-top: .5rem; max-width: 400px; }
+    .ft-wrap { overflow-x: auto; }
+    .ft { width: 100%; border-collapse: collapse; font-size: .78rem; }
+    .ft th { padding: .38rem .6rem; font-size: .7rem; text-transform: uppercase; letter-spacing: .04em; color: #fff; font-weight: 600; text-align: center; white-space: nowrap; }
+    .ft th:first-child { text-align: left; background: var(--red); border-radius: 6px 0 0 0; }
+    .ft .thg { background: var(--green); }
+    .ft td { padding: .38rem .6rem; text-align: center; border-bottom: 1px solid var(--border); font-size: .78rem; }
+    .ft td:first-child { text-align: left; font-weight: 500; white-space: nowrap; }
+    .ft tr:last-child td { border-bottom: none; }
+    .ft tr:hover td { background: #faf5f5; }
+    .stripe td { background: #fbf9f9; }
+    .stripe:hover td { background: #f5f0f0; }
+    .ft .tool { font-size: .65rem; color: var(--muted); font-weight: 400; }
+
+    /* ── Interactive Correlogram ── */
+    .cg-outer { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .cg-grid { display: grid; gap: 3px; min-width: max-content; }
+    .cg-col-lbl { height: 96px; display: flex; align-items: flex-end; justify-content: flex-start; overflow: visible; padding-left: 3px; }
+    .cg-col-lbl span { display: inline-block; transform: rotate(-45deg); transform-origin: 0% 100%; white-space: nowrap; font-size: .7rem; color: var(--text); font-weight: 500; line-height: 1; }
+    .cg-row-lbl { display: flex; align-items: center; justify-content: flex-end; font-size: .72rem; color: var(--text); font-weight: 500; padding-right: .65rem; white-space: nowrap; min-width: 140px; }
+    .cg-cell { width: 56px; height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 4px; cursor: default; transition: transform .12s, box-shadow .12s, filter .12s; position: relative; gap: 1px; }
+    .cg-cell:not(.cg-diag):hover { transform: scale(1.12); box-shadow: 0 4px 16px rgba(0,0,0,.3); z-index: 5; filter: brightness(1.06); }
+    .cg-val { font-size: .72rem; font-weight: 700; line-height: 1; }
+    .cg-stars { font-size: .58rem; line-height: 1; opacity: .85; }
+    .cg-diag-txt { color: rgba(255,255,255,.93); font-size: .62rem; font-weight: 700; text-align: center; padding: 2px 4px; line-height: 1.3; }
+    .corr-tt { position: fixed; background: rgba(20,15,15,.93); color: #fff; border-radius: 9px; padding: .55rem .85rem; font-size: .78rem; pointer-events: none; display: none; z-index: 999; max-width: 230px; line-height: 1.55; box-shadow: 0 4px 20px rgba(0,0,0,.35); }
+    .corr-tt .tt-rho { font-size: 1rem; font-weight: 700; }
+    .corr-tt .tt-pos { color: #7ECC8F; }
+    .corr-tt .tt-neg { color: #FF8A8A; }
+    .corr-tt .tt-vars { color: rgba(255,255,255,.65); font-size: .73rem; }
+
+    /* ── Old corr table ── */
+    .corr-wrap { overflow-x: auto; }
+    .ct { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    .ct th { background: var(--red); color: #fff; padding: .45rem .7rem; font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-align: left; }
+    .ct th:nth-child(3), .ct th:last-child { text-align: center; }
+    .ct td { padding: .42rem .7rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .ct td:nth-child(3) { text-align: center; }
+    .ct td:last-child { text-align: center; font-size: .75rem; color: var(--muted); }
+    .ct tr:last-child td { border-bottom: none; }
+    .ct tr:hover td { background: var(--green-lt); }
+    .rho { display: inline-flex; align-items: center; gap: .3rem; font-weight: 700; font-size: .88rem; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .sig { color: #8B1A1A; font-weight: 700; }
+
+    /* ── PDF ── */
+    .pdf-btns { display: flex; gap: .7rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .btn-outline { background: transparent; color: var(--red); border: 2px solid var(--border); border-radius: 8px; padding: .6rem 1.2rem; font-size: .85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: .35rem; transition: border-color .15s; }
+    .btn-outline:hover { border-color: var(--red); }
+    .pdf-frame { width: 100%; height: 680px; border: 2px solid var(--border); border-radius: var(--r); background: #eee; display: block; }
+    .pdf-fb { font-size: .8rem; color: var(--muted); margin-top: .5rem; }
+
+    /* ── Footer ── */
+    footer { background: var(--red-dark); color: rgba(255,255,255,.78); padding: 2.25rem 0; }
+    .ft-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+    footer h4 { color: #fff; font-size: .88rem; margin-bottom: .45rem; }
+    footer p { font-size: .78rem; line-height: 1.7; }
+    footer sup { font-size: .65em; }
+    footer a { color: #A8D4AC; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .ft-logos { display: flex; gap: .7rem; align-items: center; margin-top: .75rem; flex-wrap: wrap; }
+    .ft-logo-pill { background: rgba(255,255,255,.9); border-radius: 6px; padding: .25rem .65rem; display: inline-flex; align-items: center; }
+    .ft-logo-pill img { height: 28px; object-fit: contain; display: block; }
+    .ft-disc { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,.14); font-size: .7rem; color: rgba(255,255,255,.45); text-align: center; }
+
+    /* ── Lightbox ── */
+    #lb { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,.88); align-items: center; justify-content: center; cursor: pointer; }
+    #lb.open { display: flex; }
+    #lb img { max-width: 90vw; max-height: 90vh; border-radius: var(--r); box-shadow: 0 8px 40px rgba(0,0,0,.5); }
+    #lb-x { position: absolute; top: 1rem; right: 1.5rem; color: #fff; font-size: 2rem; background: none; border: none; cursor: pointer; line-height: 1; }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .method-grid { grid-template-columns: 1fr; }
+      .desc-layout  { grid-template-columns: 1fr; }
+      .ft-grid      { grid-template-columns: 1fr; gap: 1rem; }
+      .nav-links    { display: none; }
+      .ch-wrap      { height: 240px; }
+      section       { padding: 2rem 0; }
+      #hero         { padding: 2rem 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- filigrana fissa su tutta la pagina
+<div class="watermark" aria-hidden="true">
+  <img class="wm-logo" src="assets/logo_paideia.png" alt="">
+  <img class="wm-logo" src="assets/logo_unito.png" alt="">
+</div> -->
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header>
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="#hero"><span>Talkidz</span> · CLASTA 2026</a>
+      <ul class="nav-links">
+        <li><a href="#metodo">Metodo</a></li>
+        <li><a href="#descrittive">Descrittive</a></li>
+        <li><a href="#correlazioni">Correlazioni</a></li>
+        <li><a href="#poster">Poster</a></li>
+      </ul>
+      <a class="btn-nav" href="assets/poster_clasta2026.pdf" download>Scarica Poster</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-tag">CLASTA 2026 · Progetto Talkidz</div>
+    <h1>Sensibilità evolutiva del test Talkidz e validità convergente rispetto ad altre prove standardizzate</h1>
+    <div class="hero-logos">
+      <div class="hero-logo-pill"><img src="assets/logo_paideia.png" alt="Fondazione Paideia Ente Filantropico"></div>
+      <div class="hero-logo-pill"><img src="assets/logo_unito.png" alt="Università degli Studi di Torino"></div>
+    </div>
+    <p class="hero-sub">
+      Arianna Viotti<sup>1</sup>, Francesco Petriglia<sup>1</sup>, Andrea Meirone<sup>1</sup>,
+      Michele Settanni<sup>2</sup>, Francesco Quilghini<sup>2</sup>, Nicola Barbaro<sup>2</sup>,
+      Cristina Gena<sup>2</sup>, Rossana Damiano<sup>2</sup>, Lia Draetta<sup>2</sup><br>
+      <span style="font-size:.82rem"><sup>1</sup>&thinsp;Fondazione Paideia Ente Filantropico &ensp;<sup>2</sup>&thinsp;Università degli Studi di Torino</span>
+    </p>
+    <div class="badges">
+      <span class="badge"><strong>N = 85</strong> bambini a sviluppo tipico</span>
+      <span class="badge"><strong>3</strong> fasce d'età (3;6–6;5)</span>
+      <span class="badge">Correlazioni di Spearman &mdash; p &lt; .001</span>
+    </div>
+    <div class="hero-btns">
+      <a class="btn-primary" href="assets/poster_clasta2026.pdf" download>Scarica Poster PDF</a>
+      <a class="btn-ghost" href="#descrittive">Esplora i dati</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ METODO ═══════════ -->
+<section id="metodo">
+  <div class="wrap">
+    <h2 class="sec-title">Metodo</h2>
+    <div class="method-grid">
+      <div class="method-card">
+        <h3>Partecipanti</h3>
+        <p><strong>85 bambini</strong> italiani a sviluppo tipico, età 3;6–6;5. Nessun disturbo del linguaggio, cognitivo o uditivo documentato.</p>
+      </div>
+      <div class="method-card">
+        <h3>Strumenti</h3>
+        <p><strong>Talkidz</strong> (40 tavole) &mdash; % parole corrette, % variabilità, % accuratezza globale e consonantica, LME in unità.<br><br>
+        <strong>BVL 4-12</strong> &mdash; Denominazione e Articolazione; Ripetizione di non parole e frasi.</p>
+      </div>
+      <div class="method-card">
+        <h3>Obiettivi e analisi</h3>
+        <p>Verificare la <strong>sensibilità evolutiva</strong> degli indici Talkidz e la <strong>validità convergente</strong> rispetto alle prove BVL.<br><br>
+        Correlazioni di <strong>Spearman</strong> &mdash; soglia p&nbsp;&lt;&nbsp;.001.</p>
+      </div>
+    </div>
+    <div class="part-center">
+      <div class="part-label">Campione per fascia d'età e sesso</div>
+      <table class="part-tbl">
+        <thead>
+          <tr><th>Fascia d'età</th><th>F</th><th>M</th><th>Totale</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>3;6–4;5</td><td>16</td><td>9</td><td>25</td></tr>
+          <tr><td>4;6–5;5</td><td>15</td><td>15</td><td>30</td></tr>
+          <tr><td>5;6–6;5</td><td>15</td><td>15</td><td>30</td></tr>
+          <tr class="tot"><td>Totale</td><td>46</td><td>39</td><td>85</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ DESCRITTIVE ═══════════ -->
+<section id="descrittive">
+  <div class="wrap">
+    <h2 class="sec-title">Statistiche descrittive<small>Medie per fascia d'età &mdash; usa le tab per navigare le variabili</small></h2>
+    <div class="card">
+      <div class="tabs-scroll"><div class="tabs" id="desc-tabs"></div></div>
+      <div class="desc-layout">
+        <div class="desc-chart-col">
+          <div class="ch-wrap"><canvas id="descChart"></canvas></div>
+          <p class="ch-note">Andamento della media per fascia d'età.</p>
+        </div>
+        <div>
+          <div class="ft-wrap">
+            <table class="ft">
+              <thead>
+                <tr>
+                  <th>Variabile</th>
+                  <th class="thg">3;6–4;5<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(n=25)</span></th>
+                  <th class="thg">4;6–5;5<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(n=30)</span></th>
+                  <th class="thg">5;6–6;5<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(n=30)</span></th>
+                </tr>
+              </thead>
+              <tbody id="fullTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CORRELAZIONI ═══════════ -->
+<section id="correlazioni" style="background:#fff;">
+  <div class="wrap">
+    <h2 class="sec-title">Correlazioni di Spearman<small>Tutte p &lt; .05 almeno &mdash; passa il cursore sulle celle per i dettagli</small></h2>
+
+    <!-- Correlogramma interattivo -->
+    <div class="card" style="margin-bottom:1.25rem;">
+      <div class="cg-outer">
+        <div id="corrgram-container"></div>
+      </div>
+      <p style="font-size:.7rem;color:var(--muted);margin-top:.75rem;text-align:center;">
+        Verde = correlazione positiva &ensp;|&ensp; Rosso = correlazione negativa &ensp;|&ensp;
+        *** p&lt;.001 &ensp; ** p&lt;.01 &ensp; * p&lt;.05
+      </p>
+    </div>
+
+    <!-- Tabella correlazioni poster -->
+    <details>
+      <summary style="cursor:pointer;font-size:.82rem;font-weight:600;color:var(--red);margin-bottom:.75rem;user-select:none;">
+        Tabella correlazioni
+      </summary>
+      <div class="card corr-wrap" style="margin-top:.75rem;">
+        <table class="ct">
+          <thead>
+            <tr><th>Variabile 1</th><th>Variabile 2</th><th>&rho;</th><th>p</th></tr>
+          </thead>
+          <tbody id="corrTbody"></tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ═══════════ POSTER PDF ═══════════ -->
+<section id="poster">
+  <div class="wrap">
+    <h2 class="sec-title">Poster<small>CLASTA 2026</small></h2>
+    <div class="card">
+      <div class="pdf-btns">
+        <a class="btn-primary" href="assets/poster_clasta2026.pdf" download>Scarica PDF</a>
+        <a class="btn-outline" href="assets/poster_clasta2026.pdf" target="_blank">Apri in nuova scheda</a>
+      </div>
+      <iframe class="pdf-frame" src="assets/poster_clasta2026.pdf" title="Poster CLASTA 2026"></iframe>
+      <p class="pdf-fb">Se il PDF non si carica, usa i pulsanti sopra per aprirlo o scaricarlo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="wrap">
+    <div class="ft-grid">
+      <div>
+        <h4>Autori</h4>
+        <p>
+          Arianna Viotti<sup>1</sup>, Francesco Petriglia<sup>1</sup>, Andrea Meirone<sup>1</sup>,<br>
+          Michele Settanni<sup>2</sup>, Francesco Quilghini<sup>2</sup>, Nicola Barbaro<sup>2</sup>,<br>
+          Cristina Gena<sup>2</sup>, Rossana Damiano<sup>2</sup>, Lia Draetta<sup>2</sup>
+        </p>
+      </div>
+      <div>
+        <h4>Affiliazioni</h4>
+        <p>
+          <sup>1</sup> Fondazione Paideia Ente Filantropico<br>
+          <sup>2</sup> Università degli Studi di Torino<br><br>
+          CLASTA 2026
+        </p>
+        <div class="ft-logos">
+          <div class="ft-logo-pill"><img src="assets/logo_paideia.png" alt="Fondazione Paideia"></div>
+          <div class="ft-logo-pill"><img src="assets/logo_unito.png" alt="UniTo"></div>
+        </div>
+      </div>
+      <div>
+        <h4>Dati</h4>
+        <p>
+          I dati grezzi non sono distribuiti.<br>
+          Questo sito espone esclusivamente<br>
+          statistiche aggregate per fascia d'età.
+        </p>
+      </div>
+    </div>
+    <p class="ft-disc">© 2026 Progetto Talkidz &mdash; N=85 bambini italiani a sviluppo tipico &mdash; dati individuali non condivisi</p>
+  </div>
+</footer>
+
+<!-- Lightbox -->
+<div id="lb"><button id="lb-x">&times;</button><img id="lb-img" src="" alt=""></div>
+
+<!-- Tooltip correlogramma -->
+<div class="corr-tt" id="corr-tt"></div>
+
+<script>
+/* ──────────────────────────────────────────────────
+   DATI AGGREGATI  (pre-calcolati da N=85, raw non incluso)
+────────────────────────────────────────────────── */
+const FASCE    = ['3.6-4.5','4.6-5.5','5.6-6.5'];
+const F_LABELS = ['3;6–4;5','4;6–5;5','5;6–6;5'];
+
+const AGG = {
+  '3.6-4.5':{n:25, articolazione:{m:123.36,s:19.67}, ripFrasi:{m:14.33,s:3.77}, ripNP:{m:11.58,s:2.98}, pctParole:{m:86.93,s:7.18}, pctVar:{m:5.79,s:2.11}, globalAcc:{m:93.42,s:3.95}, consonantAcc:{m:92.77,s:4.52}, conProcessi:{m:10.29,s:6.53}},
+  '4.6-5.5':{n:30, articolazione:{m:132.24,s:16.47}, ripFrasi:{m:15.80,s:3.11}, ripNP:{m:12.17,s:2.76}, pctParole:{m:91.41,s:5.57}, pctVar:{m:3.91,s:1.97}, globalAcc:{m:95.41,s:3.30}, consonantAcc:{m:94.45,s:4.05}, conProcessi:{m:6.29,s:5.14}},
+  '5.6-6.5':{n:30, articolazione:{m:144.47,s:7.59},  ripFrasi:{m:18.00,s:1.95}, ripNP:{m:13.57,s:1.89}, pctParole:{m:93.27,s:3.57}, pctVar:{m:3.54,s:1.75}, globalAcc:{m:97.06,s:1.52}, consonantAcc:{m:96.73,s:2.24}, conProcessi:{m:4.78,s:2.83}}
+};
+
+/* Correlazioni poster (tabella di riferimento) */
+const CORR = [
+  {v1:'Età (mesi)',          v2:'Articolazione (BVL)',    r:0.612,neg:false},
+  {v1:'Età (mesi)',          v2:'Rip. frasi (BVL)',       r:0.519,neg:false},
+  {v1:'Età (mesi)',          v2:'Rip. non parole (BVL)',  r:0.356,neg:false},
+  {v1:'Età (mesi)',          v2:'% Parole corrette',      r:0.496,neg:false},
+  {v1:'Età (mesi)',          v2:'LME (unità)',        r:0.424,neg:false},
+  {v1:'Età (mesi)',          v2:'% Variabilità',      r:0.506,neg:true},
+  {v1:'% Parole corrette',   v2:'Articolazione (BVL)',    r:0.585,neg:false},
+  {v1:'% Parole corrette',   v2:'Rip. frasi (BVL)',       r:0.595,neg:false},
+  {v1:'% Variabilità',       v2:'Articolazione (BVL)',    r:0.517,neg:true},
+  {v1:'% Variabilità',       v2:'Rip. frasi (BVL)',       r:0.560,neg:true},
+  {v1:'LME (unità)',          v2:'Rip. frasi (BVL)',       r:0.444,neg:false},
+  {v1:'Età (mesi)',          v2:'% Acc. Globale',         r:0.451,neg:false},
+  {v1:'Età (mesi)',          v2:'% Acc. Consonantica',    r:0.400,neg:false},
+  {v1:'% Acc. Globale',      v2:'Articolazione (BVL)',    r:0.702,neg:false},
+  {v1:'% Acc. Consonantica', v2:'Articolazione (BVL)',    r:0.685,neg:false},
+  {v1:'% Acc. Globale',      v2:'Rip. frasi (BVL)',       r:0.473,neg:false},
+  {v1:'% Acc. Consonantica', v2:'Rip. frasi (BVL)',       r:0.446,neg:false},
+];
+
+/* Matrice 9×9 completa per il correlogramma */
+const CG_LABELS = ['Età (mesi)','Articolazione','Rip. Frasi','Rip. NP','% Parole Corr.','% Variabilità','% Acc. Globale','% Acc. Cons.','% Parole Proc.'];
+const CG_SHORT  = ['Età','Artic.','Rip.F.','Rip.NP','% Par.','% Var.','Acc.G.','Acc.C.','Processi'];
+const CG_MATRIX = [[{"r":1.0,"p":0.0},{"r":0.612,"p":0.0},{"r":0.519,"p":0.0},{"r":0.356,"p":0.0009},{"r":0.496,"p":0.0},{"r":-0.506,"p":0.0},{"r":0.451,"p":0.0},{"r":0.4,"p":0.0001},{"r":-0.472,"p":0.0}],[{"r":0.612,"p":0.0},{"r":1.0,"p":0.0},{"r":0.504,"p":0.0},{"r":0.405,"p":0.0001},{"r":0.585,"p":0.0},{"r":-0.517,"p":0.0},{"r":0.702,"p":0.0},{"r":0.685,"p":0.0},{"r":-0.559,"p":0.0}],[{"r":0.519,"p":0.0},{"r":0.504,"p":0.0},{"r":1.0,"p":0.0},{"r":0.333,"p":0.002},{"r":0.595,"p":0.0},{"r":-0.56,"p":0.0},{"r":0.473,"p":0.0},{"r":0.446,"p":0.0},{"r":-0.545,"p":0.0}],[{"r":0.356,"p":0.0009},{"r":0.405,"p":0.0001},{"r":0.333,"p":0.002},{"r":1.0,"p":0.0},{"r":0.467,"p":0.0},{"r":-0.406,"p":0.0001},{"r":0.44,"p":0.0},{"r":0.407,"p":0.0001},{"r":-0.424,"p":0.0001}],[{"r":0.496,"p":0.0},{"r":0.585,"p":0.0},{"r":0.595,"p":0.0},{"r":0.467,"p":0.0},{"r":1.0,"p":0.0},{"r":-0.815,"p":0.0},{"r":0.848,"p":0.0},{"r":0.764,"p":0.0},{"r":-0.942,"p":0.0}],[{"r":-0.506,"p":0.0},{"r":-0.517,"p":0.0},{"r":-0.56,"p":0.0},{"r":-0.406,"p":0.0001},{"r":-0.815,"p":0.0},{"r":1.0,"p":0.0},{"r":-0.759,"p":0.0},{"r":-0.674,"p":0.0},{"r":0.862,"p":0.0}],[{"r":0.451,"p":0.0},{"r":0.702,"p":0.0},{"r":0.473,"p":0.0},{"r":0.44,"p":0.0},{"r":0.848,"p":0.0},{"r":-0.759,"p":0.0},{"r":1.0,"p":0.0},{"r":0.964,"p":0.0},{"r":-0.85,"p":0.0}],[{"r":0.4,"p":0.0001},{"r":0.685,"p":0.0},{"r":0.446,"p":0.0},{"r":0.407,"p":0.0001},{"r":0.764,"p":0.0},{"r":-0.674,"p":0.0},{"r":0.964,"p":0.0},{"r":1.0,"p":0.0},{"r":-0.757,"p":0.0}],[{"r":-0.472,"p":0.0},{"r":-0.559,"p":0.0},{"r":-0.545,"p":0.0},{"r":-0.424,"p":0.0001},{"r":-0.942,"p":0.0},{"r":0.862,"p":0.0},{"r":-0.85,"p":0.0},{"r":-0.757,"p":0.0},{"r":1.0,"p":0.0}]];
+
+const DESC_VARS = [
+  {key:'articolazione', label:'Articolazione (BVL)',   unit:'pt', neg:false, tool:'BVL'},
+  {key:'ripFrasi',      label:'Rip. Frasi (BVL)',      unit:'pt', neg:false, tool:'BVL'},
+  {key:'ripNP',         label:'Rip. Non Parole (BVL)', unit:'pt', neg:false, tool:'BVL'},
+  {key:'pctParole',     label:'% Parole Corrette',     unit:'%',  neg:false, tool:'Talkidz'},
+  {key:'pctVar',        label:'% Variabilità',     unit:'%',  neg:true,  tool:'Talkidz'},
+  {key:'globalAcc',     label:'% Acc. Globale',        unit:'%',  neg:false, tool:'Talkidz'},
+  {key:'consonantAcc',  label:'% Acc. Consonantica',   unit:'%',  neg:false, tool:'Talkidz'},
+  {key:'conProcessi',   label:'% Parole c/ Processi',  unit:'%',  neg:true,  tool:'Talkidz'},
+];
+
+/* ──────────────────────────────────────────────────
+   CHART.JS DEFAULTS
+────────────────────────────────────────────────── */
+Chart.defaults.font.family = "'Inter','Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size   = 12;
+Chart.defaults.color       = '#6B7A8D';
+
+/* ──────────────────────────────────────────────────
+   DESCRITTIVE: TABS + LINE CHART
+────────────────────────────────────────────────── */
+let descChart = null;
+
+function buildTabs() {
+  const wrap = document.getElementById('desc-tabs');
+  DESC_VARS.forEach((v, i) => {
+    const b = document.createElement('button');
+    b.className = 'tab' + (i===0 ? ' on' : '');
+    b.textContent = v.label;
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+      refreshDescChart(i);
+    });
+    wrap.appendChild(b);
+  });
+}
+
+function refreshDescChart(idx) {
+  const v     = DESC_VARS[idx];
+  const vals  = FASCE.map(f => AGG[f][v.key].m);
+  const color = v.neg ? '#8B1A1A' : '#2B7A3A';
+  const bgCol = v.neg ? 'rgba(139,26,26,.08)' : 'rgba(43,122,58,.08)';
+
+  if (descChart) {
+    descChart.data.datasets[0].data             = vals;
+    descChart.data.datasets[0].borderColor      = color;
+    descChart.data.datasets[0].backgroundColor  = bgCol;
+    descChart.data.datasets[0].pointBackgroundColor = color;
+    descChart.data.datasets[0].label            = v.label;
+    descChart.options.scales.y.title.text       = v.unit;
+    descChart.options.plugins.title.text        = v.label;
+    descChart.update('active');
+    return;
+  }
+  const ctx = document.getElementById('descChart').getContext('2d');
+  descChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: F_LABELS,
+      datasets: [{
+        label: v.label, data: vals,
+        borderColor: color, backgroundColor: bgCol,
+        pointBackgroundColor: color, pointRadius: 6, pointHoverRadius: 8,
+        tension: 0.35, fill: true, borderWidth: 2.5,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        title:  { display: true, text: v.label, color: '#2C3E50', font:{size:13,weight:'600'} },
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ` M = ${c.parsed.y.toFixed(2)} ${v.unit}` } }
+      },
+      scales: {
+        x: { grid:{color:'rgba(0,0,0,.04)'}, ticks:{font:{size:11}} },
+        y: { title:{display:true,text:v.unit,color:'#6B7A8D',font:{size:11}}, grid:{color:'rgba(0,0,0,.04)'}, ticks:{font:{size:11}} }
+      }
+    }
+  });
+}
+
+function buildFullTable() {
+  const tb = document.getElementById('fullTbody');
+  DESC_VARS.forEach((v, i) => {
+    const tr = document.createElement('tr');
+    if (i%2===1) tr.className = 'stripe';
+    tr.style.cursor = 'pointer';
+    let html = `<td>${v.label}<br><span class="tool">${v.tool}</span></td>`;
+    FASCE.forEach(f => { const d=AGG[f][v.key]; html += `<td>${d.m.toFixed(2)}<br><span style="font-size:.7rem;color:var(--muted)">(${d.s.toFixed(2)})</span></td>`; });
+    tr.innerHTML = html;
+    tr.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach((b,k) => b.classList.toggle('on', k===i));
+      refreshDescChart(i);
+    });
+    tb.appendChild(tr);
+  });
+}
+
+/* ──────────────────────────────────────────────────
+   CORRELATION TABLE (reference)
+────────────────────────────────────────────────── */
+function buildCorrTable() {
+  const tb = document.getElementById('corrTbody');
+  CORR.forEach(c => {
+    const color = c.neg
+      ? (c.r>=.5 ? '#8B1A1A' : c.r>=.35 ? '#B83030' : '#D05050')
+      : (c.r>=.55 ? '#1a6b30' : c.r>=.4  ? '#2B7A3A' : '#52A96B');
+    const sign = c.neg ? '−' : '+';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${c.v1}</td><td>${c.v2}</td>
+      <td><span class="rho"><span class="dot" style="background:${color}"></span>
+      <span style="color:${color}">${sign}${c.r.toFixed(3)}</span></span></td>
+      <td><span class="sig">***</span></td>`;
+    tb.appendChild(tr);
+  });
+}
+
+/* ──────────────────────────────────────────────────
+   CORRELOGRAMMA INTERATTIVO
+────────────────────────────────────────────────── */
+function lerp(a, b, t) { return Math.round(a + (b-a)*t); }
+
+function rhoColor(r, isDiag) {
+  if (isDiag) return '#2A1A1A';
+  const a = Math.abs(r);
+  if (r >= 0) return `rgb(${lerp(255,43,a)},${lerp(255,122,a)},${lerp(255,58,a)})`;
+  return `rgb(${lerp(255,139,a)},${lerp(255,26,a)},${lerp(255,26,a)})`;
+}
+
+function sigStars(p) {
+  if (p === 0 || p < 0.001) return '***';
+  if (p < 0.01) return '**';
+  if (p < 0.05) return '*';
+  return '';
+}
+
+function buildCorrgram() {
+  const container = document.getElementById('corrgram-container');
+  const n         = CG_LABELS.length;
+  const tt        = document.getElementById('corr-tt');
+
+  const grid = document.createElement('div');
+  grid.className = 'cg-grid';
+  grid.style.gridTemplateColumns = `140px repeat(${n},56px)`;
+
+  /* top-left corner */
+  const corner = document.createElement('div');
+  grid.appendChild(corner);
+
+  /* column labels (top, rotated) */
+  for (let j = 0; j < n; j++) {
+    const d = document.createElement('div');
+    d.className = 'cg-col-lbl';
+    d.innerHTML = `<span>${CG_LABELS[j]}</span>`;
+    grid.appendChild(d);
+  }
+
+  /* rows */
+  for (let i = 0; i < n; i++) {
+    /* row label */
+    const rl = document.createElement('div');
+    rl.className = 'cg-row-lbl';
+    rl.textContent = CG_LABELS[i];
+    grid.appendChild(rl);
+
+    /* cells */
+    for (let j = 0; j < n; j++) {
+      const cell = document.createElement('div');
+      const isDiag = i === j;
+      const {r, p} = CG_MATRIX[i][j];
+      cell.className = 'cg-cell' + (isDiag ? ' cg-diag' : '');
+      cell.style.background = rhoColor(r, isDiag);
+
+      if (isDiag) {
+        cell.innerHTML = `<span class="cg-diag-txt">${CG_SHORT[i]}</span>`;
+      } else {
+        const absR = Math.abs(r);
+        const txtCol = absR > 0.45 ? '#fff' : '#222';
+        const sign   = r >= 0 ? '+' : '−';
+        const val    = Math.abs(r).toFixed(2).replace('0.', '.');
+        const stars  = sigStars(p);
+        cell.innerHTML =
+          `<span class="cg-val" style="color:${txtCol}">${sign}${val}</span>` +
+          (stars ? `<span class="cg-stars" style="color:${txtCol}">${stars}</span>` : '');
+
+        /* hover tooltip */
+        cell.addEventListener('mouseenter', e => {
+          const signFull = r >= 0 ? '+' : '−';
+          const cls = r >= 0 ? 'tt-pos' : 'tt-neg';
+          const pStr = p === 0 || p < 0.001 ? '< .001' : (p < 0.01 ? '< .01' : '< .05');
+          tt.innerHTML =
+            `<div class="tt-vars">${CG_LABELS[i]} &times; ${CG_LABELS[j]}</div>` +
+            `<div class="tt-rho ${cls}">&rho;&nbsp;=&nbsp;${signFull}${Math.abs(r).toFixed(3)}</div>` +
+            `<div style="font-size:.72rem;color:rgba(255,255,255,.6)">p&nbsp;${pStr}&emsp;N=85</div>`;
+          tt.style.display = 'block';
+        });
+        cell.addEventListener('mousemove', e => {
+          const pad = 14;
+          const tw  = tt.offsetWidth;
+          const left = e.clientX + pad + tw > window.innerWidth ? e.clientX - tw - pad : e.clientX + pad;
+          tt.style.left = left + 'px';
+          tt.style.top  = (e.clientY - 16) + 'px';
+        });
+        cell.addEventListener('mouseleave', () => { tt.style.display = 'none'; });
+      }
+
+      grid.appendChild(cell);
+    }
+  }
+
+  container.appendChild(grid);
+}
+
+/* ──────────────────────────────────────────────────
+   LIGHTBOX (kept for future use)
+────────────────────────────────────────────────── */
+const lb = document.getElementById('lb');
+lb.addEventListener('click', () => lb.classList.remove('open'));
+document.getElementById('lb-x').addEventListener('click', e => { e.stopPropagation(); lb.classList.remove('open'); });
+document.addEventListener('keydown', e => { if (e.key==='Escape') lb.classList.remove('open'); });
+
+/* ──────────────────────────────────────────────────
+   INIT
+────────────────────────────────────────────────── */
+buildTabs();
+refreshDescChart(0);
+buildFullTable();
+buildCorrgram();
+buildCorrTable();
+</script>
+</body>
+</html>

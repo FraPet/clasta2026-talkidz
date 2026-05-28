@@ -1,0 +1,14 @@
+# Dati grezzi — non distribuire mai
+dataset_CLASTA2026_N85.csv
+tabella_correlazioni_clasta2026_v2.csv
+
+# File originali nella root (copie già in assets/)
+Poster Clasta 2026.pdf
+correlogramma_talkidz_clasta2026_v3.png
+tabella_correlazioni_clasta2026_v2.png
+tabella_descrittive_clasta2026.png
+
+# Sistema
+Thumbs.db
+.DS_Store
+desktop.ini
