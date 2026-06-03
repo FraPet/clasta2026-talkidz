@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rimani aggiornato · Talkidz CLASTA 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red:      #8B1A1A;
+      --red-dark: #6E1515;
+      --green:    #2B7A3A;
+      --bg:       #F8F5F4;
+      --card:     #FFFFFF;
+      --text:     #2C3E50;
+      --muted:    #6B7A8D;
+      --border:   #DDE4EC;
+      --r:        10px;
+      --sh:       0 2px 12px rgba(80,20,20,.09);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* ── Header / Nav ── */
+    header { position: sticky; top: 0; z-index: 100; background: var(--red); box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 52px; gap: 1rem; }
+    .brand { font-weight: 700; font-size: .92rem; color: #fff; text-decoration: none; white-space: nowrap; }
+    .brand span { color: #F4A4A4; }
+    .nav-links { display: flex; gap: 1.1rem; list-style: none; }
+    .nav-links a { color: rgba(255,255,255,.78); text-decoration: none; font-size: .76rem; font-weight: 500; white-space: nowrap; transition: color .15s; }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a.active { color: #fff; font-weight: 700; }
+    .btn-nav { background: var(--green); color: #fff; border: none; border-radius: 6px; padding: .36rem .8rem; font-size: .76rem; font-weight: 600; text-decoration: none; white-space: nowrap; transition: background .15s; }
+    .btn-nav:hover { background: #1e5e2b; }
+
+    /* ── Page hero ── */
+    .page-hero { background: linear-gradient(135deg, #8B1A1A 0%, #A32020 100%); color: #fff; padding: 2.5rem 0 2rem; }
+    .hero-tag { display: inline-block; background: rgba(255,255,255,.12); border-radius: 20px; padding: .22rem .8rem; font-size: .72rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #F4A4A4; margin-bottom: .9rem; }
+    .page-hero h1 { font-size: clamp(1.2rem,2.8vw,1.65rem); font-weight: 700; line-height: 1.35; margin-bottom: .5rem; }
+    .page-hero p { font-size: .88rem; color: rgba(255,255,255,.72); max-width: 600px; }
+
+    /* ── Form container ── */
+    .gform-section { padding: 3rem 0; }
+    .gform-wrap { background: var(--card); border-radius: var(--r); box-shadow: var(--sh); overflow: hidden; max-width: 680px; margin: 0 auto; }
+    .gform-wrap iframe { display: block; width: 100%; border: none; }
+
+    /* ── Footer ── */
+    footer { background: var(--red-dark); color: rgba(255,255,255,.78); padding: 2.25rem 0; }
+    .ft-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+    footer h4 { color: #fff; font-size: .88rem; margin-bottom: .45rem; }
+    footer p { font-size: .78rem; line-height: 1.7; }
+    footer sup { font-size: .65em; }
+    footer a { color: #A8D4AC; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .ft-logos { display: flex; gap: .7rem; align-items: center; margin-top: .75rem; flex-wrap: wrap; }
+    .ft-logo-pill { background: rgba(255,255,255,.9); border-radius: 6px; padding: .25rem .65rem; display: inline-flex; align-items: center; }
+    .ft-logo-pill img { height: 28px; object-fit: contain; display: block; }
+    .ft-disc { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,.14); font-size: .7rem; color: rgba(255,255,255,.45); text-align: center; }
+
+    @media (max-width: 700px) {
+      .ft-grid   { grid-template-columns: 1fr; gap: 1rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header>
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="index.html"><span>Talkidz</span> · CLASTA 2026</a>
+      <ul class="nav-links">
+        <li><a href="index.html#metodo">Metodo</a></li>
+        <li><a href="index.html#descrittive">Descrittive</a></li>
+        <li><a href="index.html#correlazioni">Correlazioni</a></li>
+        <li><a href="index.html#presentazione">Materiali</a></li>
+        <li><a href="index.html#contatti">Contatti</a></li>
+        <li><a href="contatti.html" class="active">Rimani aggiornato</a></li>
+      </ul>
+      <a class="btn-nav" href="index.html#presentazione">Scarica Materiali</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ═══════════ PAGE HERO ═══════════ -->
+<div class="page-hero">
+  <div class="wrap">
+    <div class="hero-tag">Progetto Talkidz</div>
+    <h1>Rimani aggiornato</h1>
+    <p>Lascia la tua email per essere informato sugli sviluppi del progetto Talkidz: pubblicazioni, nuovi dati, strumenti disponibili.</p>
+  </div>
+</div>
+
+<!-- ═══════════ GOOGLE FORM ═══════════ -->
+<section class="gform-section">
+  <div class="wrap">
+    <div class="gform-wrap">
+      <iframe
+        src="https://docs.google.com/forms/d/e/1FAIpQLSdCYQziLS3Jp3u-ji5DgvEUXLkKAyNYus9S6Pf2JAP4M2wvuw/viewform?embedded=true"
+        height="1868"
+        title="Rimani aggiornato sul progetto Talkidz">
+        Caricamento…
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="wrap">
+    <div class="ft-grid">
+      <div>
+        <h4>Autori</h4>
+        <p>
+          Arianna Viotti<sup>1</sup>, Francesco Petriglia<sup>1</sup>, Andrea Meirone<sup>1</sup>,<br>
+          Michele Settanni<sup>2</sup>, Francesco Quilghini<sup>2</sup>, Nicola Barbaro<sup>2</sup>,<br>
+          Cristina Gena<sup>2</sup>, Rossana Damiano<sup>2</sup>, Lia Draetta<sup>2</sup>
+        </p>
+      </div>
+      <div>
+        <h4>Affiliazioni</h4>
+        <p>
+          <sup>1</sup> Fondazione Paideia Ente Filantropico<br>
+          <sup>2</sup> Università degli Studi di Torino<br><br>
+          CLASTA 2026
+        </p>
+        <div class="ft-logos">
+          <div class="ft-logo-pill"><img src="assets/logo_paideia.png" alt="Fondazione Paideia"></div>
+          <div class="ft-logo-pill"><img src="assets/logo_unito.png" alt="UniTo"></div>
+        </div>
+      </div>
+      <div>
+        <h4>Dati</h4>
+        <p>
+          I dati grezzi non sono distribuiti.<br>
+          Questo sito espone esclusivamente<br>
+          statistiche aggregate per fascia d'età.
+        </p>
+      </div>
+    </div>
+    <p class="ft-disc">© 2026 Progetto Talkidz &mdash; N=85 bambini italiani a sviluppo tipico &mdash; dati individuali non condivisi</p>
+  </div>
+</footer>
+
+</body>
+</html>
