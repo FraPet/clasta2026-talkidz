@@ -196,8 +196,9 @@
         <li><a href="#metodo">Metodo</a></li>
         <li><a href="#descrittive">Descrittive</a></li>
         <li><a href="#correlazioni">Correlazioni</a></li>
-        <li><a href="#poster">Poster</a></li>
+        <li><a href="#presentazione">Presentazione</a></li>
       </ul>
+      <a class="btn-nav" href="assets/presentazione_clasta2026.pdf" download>Scarica Presentazione</a>
       <a class="btn-nav" href="assets/poster_clasta2026.pdf" download>Scarica Poster</a>
     </nav>
   </div>
@@ -218,15 +219,16 @@
       Cristina Gena<sup>2</sup>, Rossana Damiano<sup>2</sup>, Lia Draetta<sup>2</sup><br>
       <span style="font-size:.82rem"><sup>1</sup>&thinsp;Fondazione Paideia Ente Filantropico &ensp;<sup>2</sup>&thinsp;Università degli Studi di Torino</span>
     </p>
-    <div class="badges">
+    <!-- <div class="badges">
       <span class="badge"><strong>N = 85</strong> bambini a sviluppo tipico</span>
       <span class="badge"><strong>3</strong> fasce d'età (3;6–6;5)</span>
       <span class="badge">Correlazioni di Spearman &mdash; p &lt; .001</span>
-    </div>
-    <div class="hero-btns">
+    </div> -->
+    <!-- <div class="hero-btns">
+      <a class="btn-primary" href="assets/presentazione_clasta2026.pdf" download>Scarica Presentazione PDF</a>
       <a class="btn-primary" href="assets/poster_clasta2026.pdf" download>Scarica Poster PDF</a>
       <a class="btn-ghost" href="#descrittive">Esplora i dati</a>
-    </div>
+    </div> -->
   </div>
 </section>
 
@@ -331,16 +333,22 @@
   </div>
 </section>
 
-<!-- ═══════════ POSTER PDF ═══════════ -->
-<section id="poster">
+<!-- ═══════════ PRESENTAZIONE & POSTER ═══════════ -->
+<section id="presentazione">
   <div class="wrap">
-    <h2 class="sec-title">Poster<small>CLASTA 2026</small></h2>
+    <h2 class="sec-title">Materiali<small>CLASTA 2026</small></h2>
     <div class="card">
-      <div class="pdf-btns">
-        <a class="btn-primary" href="assets/poster_clasta2026.pdf" download>Scarica PDF</a>
-        <a class="btn-outline" href="assets/poster_clasta2026.pdf" target="_blank">Apri in nuova scheda</a>
+      <div class="tabs-scroll">
+        <div class="tabs">
+          <button class="tab on" onclick="switchMat(this,'assets/presentazione_clasta2026.pdf','Presentazione CLASTA 2026')">Presentazione orale</button>
+          <button class="tab"    onclick="switchMat(this,'assets/poster_clasta2026.pdf','Poster CLASTA 2026')">Poster</button>
+        </div>
       </div>
-      <iframe class="pdf-frame" src="assets/poster_clasta2026.pdf" title="Poster CLASTA 2026"></iframe>
+      <div class="pdf-btns" style="margin-top:.9rem;">
+        <a id="mat-dl"  class="btn-primary" href="assets/presentazione_clasta2026.pdf" download>Scarica PDF</a>
+        <a id="mat-ext" class="btn-outline"  href="assets/presentazione_clasta2026.pdf" target="_blank">Apri in nuova scheda</a>
+      </div>
+      <iframe id="mat-frame" class="pdf-frame" src="assets/presentazione_clasta2026.pdf" title="Presentazione CLASTA 2026"></iframe>
       <p class="pdf-fb">Se il PDF non si carica, usa i pulsanti sopra per aprirlo o scaricarlo.</p>
     </div>
   </div>
@@ -658,6 +666,15 @@ refreshDescChart(0);
 buildFullTable();
 buildCorrgram();
 buildCorrTable();
+
+function switchMat(btn, src, title) {
+  document.querySelectorAll('#presentazione .tab').forEach(t => t.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('mat-frame').src = src;
+  document.getElementById('mat-dl').href   = src;
+  document.getElementById('mat-ext').href  = src;
+  document.getElementById('mat-frame').title = title;
+}
 </script>
 </body>
 </html>
